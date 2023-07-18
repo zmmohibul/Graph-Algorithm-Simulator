@@ -3,6 +3,21 @@
   <hr class="hr hr-blurry" />
 
   <div class="d-flex justify-content-center mb-4">
+    <div mdbDropdown class="btn-group shadow-0">
+      <button
+        [disabled]="simulationStarted"
+        type="button"
+        class="mx-2 btn btn-outline-dark btn-lg btn-rounded dropdown-toggle"
+        mdbDropdownToggle
+        aria-expanded="false"
+      >
+        {{ size + " x " + size }}
+      </button>
+      <ul mdbDropdownMenu class="dropdown-menu">
+        <li><a *ngFor="let sz of sizeList" (click)="selectSize(sz)" class="dropdown-item">{{ sz + " x " + sz }}</a></li>
+      </ul>
+    </div>
+
     <button
       (click)="selectStartNodeClick()"
       [disabled]="simulationStarted"
@@ -33,10 +48,42 @@
     >
       Add Wall
     </button>
+
+    <div mdbDropdown class="btn-group shadow-0">
+      <button
+        [disabled]="simulationStarted"
+        type="button"
+        class="mx-2 btn btn-outline-dark btn-lg btn-rounded dropdown-toggle"
+        mdbDropdownToggle
+        aria-expanded="false"
+      >
+        {{ selectedAlgorithm || "Select Algorithm" }}
+      </button>
+      <ul mdbDropdownMenu class="dropdown-menu">
+        <li><a (click)="selectAlgorithm(algorithms.BFS)" class="dropdown-item">BFS</a></li>
+        <li><a (click)="selectAlgorithm(algorithms.DFS)" class="dropdown-item">DFS</a></li>
+<!--        <li><a class="dropdown-item">Something else here</a></li>-->
+      </ul>
+    </div>
   </div>
 
   <div *ngIf="!destinationReachable" class="d-flex justify-content-center mb-4">
     <p class="h3 text-danger">Destination Node is not reachable</p>
+  </div>
+
+  <div *ngIf="pathBuilt" class=" mb-4">
+    <div >
+      <div class="container text-center">
+        <p class="h3 text-success">Path from {{ startNode && startNode.id }} to {{ destinationNode && destinationNode.id }} using {{ selectedAlgorithm + " Algorithm" }}</p>
+
+        <div *ngFor="let node of pathList; index as i" class="mb-2 d-inline-block">
+          <button  class="mx-1 btn btn-outline-success btn-floating">
+            {{node.id}}
+          </button>
+          <span class="mb-1 d-inline-block">{{ i + 1 < pathList.length ? "-->" : "." }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="d-flex justify-content-center mb-3">
